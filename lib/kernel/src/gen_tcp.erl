@@ -28,6 +28,7 @@
 -export([send/2, recv/2, recv/3, unrecv/2]).
 -export([controlling_process/2]).
 -export([fdopen/2]).
+-export([ipv6_probe/0]).
 
 -include("inet_int.hrl").
 -include("file.hrl").
@@ -152,6 +153,8 @@
 %%
 %% Connect a socket
 %%
+
+ipv6_probe() -> true.
 
 -spec connect(SockAddr, Opts) -> {ok, Socket} | {error, Reason} when
       SockAddr :: socket:sockaddr_in() | socket:sockaddr_in6(),
