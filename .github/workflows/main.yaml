@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Create initial pre-release tar
+      - name: Create initial pre-release tar 
         run: .github/scripts/init-pre-release.sh
       - name: Upload source tar archive
         uses: actions/upload-artifact@v2
@@ -152,17 +152,15 @@ jobs:
       - name: Calculate BASE image
         id: base
         run: |
-          BASE_SHA=$(grep "^FROM" .github/dockerfiles/Dockerfile.${{ matrix.type }} | head -1 | awk '{print $2}')
-          BASE_TAG=$(echo ${BASE_SHA} | cut -f1 -d'@')
-          echo "::set-output name=BASE_SHA::${BASE_SHA}"
+          BASE_TAG=$(grep "^FROM" .github/dockerfiles/Dockerfile.${{ matrix.type }} | head -1 | awk '{print $2}')
           echo "::set-output name=BASE_TAG::${BASE_TAG}"
           .github/scripts/base-tag "${BASE_TAG}"
       - name: Pull BASE image
-        run: docker pull ${{ steps.base.outputs.BASE_SHA }}
+        run: docker pull ${{ steps.base.outputs.BASE_TAG }}
       - name: Build BASE image
         run: |
           docker build --pull --tag ${{ steps.base.outputs.BASE_TAG }} \
-            --cache-from ${{ steps.base.outputs.BASE_SHA }} \
+            --cache-from ${{ steps.base.outputs.BASE_TAG }} \
             --file .github/dockerfiles/Dockerfile.${{ steps.base.outputs.BASE_TYPE }} \
             --build-arg BASE=${{ steps.base.outputs.BASE }} .
       - name: Build ${{ matrix.type }} image
@@ -240,7 +238,7 @@ jobs:
           echo "::set-output name=tag::${TAG}"
           echo "::set-output name=release::${IS_RELEASE}"
           echo "::set-output name=vsn::${VSN}"
-
+      
       - uses: actions/checkout@v2
 
       ## Publish the pre-built archive and docs

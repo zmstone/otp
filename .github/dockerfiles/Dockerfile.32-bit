@@ -1,5 +1,4 @@
-# FROM docker.pkg.github.com/erlang/otp/i386-debian-base
-FROM ghcr.io/erlang/otp/i386-debian-base@sha256:1879655d57ed6b275f98b8eb3ef36bbd39a396fe3d33c7e0d1e7163f7391b9f8
+FROM docker.pkg.github.com/erlang/otp/i386-debian-base
 
 ARG MAKEFLAGS=-j4
 ENV MAKEFLAGS=$MAKEFLAGS \
