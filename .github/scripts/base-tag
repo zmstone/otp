@@ -3,15 +3,15 @@
 set -x
 
 case "$1" in
-    *i386-debian-base)
+    *i386-debian-base*)
         BASE="i386/debian"
         BASE_TYPE=debian-base
         ;;
-    *debian-base)
+    *debian-base*)
         BASE="debian"
         BASE_TYPE=debian-base
         ;;
-    *ubuntu-base)
+    *ubuntu-base*)
         BASE="ubuntu"
         BASE_TYPE=ubuntu-base
         ;;
