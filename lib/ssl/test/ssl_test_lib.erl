@@ -2143,6 +2143,7 @@ start_client(openssl, Port, ClientOpts, Config) ->
     SessionArgs =  proplists:get_value(session_args, ClientOpts, []),
     HostName = proplists:get_value(hostname, ClientOpts, net_adm:localhost()),
     SNI = openssl_sni(proplists:get_value(server_name_indication, ClientOpts, undefined)),
+    OCSPStatus = openssl_ocsp_status(proplists:get_value(ocsp_stapling, ClientOpts, undefined)),
     Debug = openssl_debug_options(),
 
     Exe = "openssl",
@@ -2162,6 +2163,7 @@ start_client(openssl, Port, ClientOpts, Config) ->
                          Reconnect ++
                          MaxFragLen ++
                          SessionArgs ++
+                         OCSPStatus ++
                          Debug;
                  Group ->
                      ["s_client",
@@ -2179,6 +2181,7 @@ start_client(openssl, Port, ClientOpts, Config) ->
                          Reconnect ++
                          MaxFragLen ++
                          SessionArgs ++
+                         OCSPStatus ++
                          Debug
              end,
     Args = maybe_force_ipv4(Args0),
@@ -2316,6 +2319,13 @@ openssl_sni(disable) ->
     ["-noservername"];
 openssl_sni(ServerName) ->
     ["-servername", ServerName].
+
+openssl_ocsp_status(undefined) ->
+    [];
+openssl_ocsp_status(true) ->
+    ["-status"];
+openssl_ocsp_status(false) ->
+    [].
 
 openssl_debug_options() ->
     ["-msg", "-debug"].
