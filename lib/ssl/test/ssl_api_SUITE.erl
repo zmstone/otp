@@ -315,7 +315,7 @@ gen_api_tests() ->
      cb_info,
      log_alert,
      getstat,
-     warn_verify_none,
+     % warn_verify_none,
      suppress_warn_verify_none,
      check_random_nonce,
      cipher_listing
