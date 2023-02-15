@@ -1529,7 +1529,6 @@ handle_options(Transport, Socket, Opts0, Role, Host) ->
                             host => Host,
                             rules => ?RULES}),
 
-    maybe_client_warn_no_verify(SslOpts2, Role),
     SslOpts = maps:without([warn_verify_none], SslOpts2),
     %% Handle special options
     {Sock, Emulated} = emulated_options(Transport, Socket, Protocol, SockOpts0),
@@ -2849,12 +2848,3 @@ add_filter(undefined, Filters) ->
     Filters;
 add_filter(Filter, Filters) ->
     [Filter | Filters].
-
-maybe_client_warn_no_verify(#{verify := verify_none,
-                             warn_verify_none := true,
-                             log_level := LogLevel}, client) ->
-            ssl_logger:log(warning, LogLevel, #{description => "Authenticity is not established by certificate path validation",
-                                                reason => "Option {verify, verify_peer} and cacertfile/cacerts is missing"}, #{});
-maybe_client_warn_no_verify(_,_) ->
-    %% Warning not needed. Note client certificate validation is optional in TLS
-    ok.
