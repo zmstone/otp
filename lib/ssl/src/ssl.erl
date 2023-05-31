@@ -1517,9 +1517,9 @@ handle_options(Transport, Socket, Opts0, Role, Host) ->
                           #{role => Role,
                             host => Host,
                             rules => ?RULES}),
-    
-    maybe_client_warn_no_verify(SslOpts2, Role),
+
     SslOpts = maps:without([warn_verify_none], SslOpts2),
+
     %% Handle special options
     {Sock, Emulated} = emulated_options(Transport, Socket, Protocol, SockOpts0),
     ConnetionCb = connection_cb(Protocol),
@@ -2124,6 +2124,10 @@ validate_option(certfile, Value, _)
 validate_option(certfile, Value, _)
   when is_list(Value) ->
     binary_filename(Value);
+validate_option(certificate_status, Value = #certificate_status{}, _) ->
+    Value;
+validate_option(certificate_status, Value = undefined, _) ->
+    Value;
 validate_option(client_preferred_next_protocols, {Precedence, PreferredProtocols}, _)
   when is_list(PreferredProtocols) ->
     validate_binary_list(client_preferred_next_protocols, PreferredProtocols),
@@ -2895,17 +2899,6 @@ add_filter(undefined, Filters) ->
     Filters;
 add_filter(Filter, Filters) ->
     [Filter | Filters].
-
-maybe_client_warn_no_verify(#{verify := verify_none,
-                             warn_verify_none := true,
-                             log_level := LogLevel}, client) ->
-    ssl_logger:log(warning, LogLevel,
-                   #{description => "Server authenticity is not verified since certificate path validation is not enabled",
-                     reason => "The option {verify, verify_peer} and one of the options 'cacertfile' or "
-                     "'cacerts' are required to enable this."}, ?LOCATION);
-maybe_client_warn_no_verify(_,_) ->
-    %% Warning not needed. Note client certificate validation is optional in TLS
-    ok.
 
 unambiguous_path(Value) ->
     AbsName = filename:absname(Value),
