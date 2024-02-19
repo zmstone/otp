@@ -629,9 +629,10 @@ do_auto_connect_2(Node, passive_cnct, From, State, ConnLookup) ->
         ConnId ->
             do_auto_connect_2(Node, ConnId, From, State, ConnLookup)
     catch
-        _:_ ->
+        Error:Reason:Stacktrace ->
             error_logger:error_msg("~n** Cannot get connection id for node ~w~n",
                                    [Node]),
+            error_logger:error_msg("~p:~p~n~p~n", [Error, Reason, Stacktrace]),
             {reply, false, State}
     end;
 do_auto_connect_2(Node, ConnId, From, State, ConnLookup) ->
@@ -733,9 +734,10 @@ handle_call({connect, Type, Node}, From, State) ->
                 end,
                 R1
         catch
-            _:_ ->
+            Error:Reason:Stacktrace ->
                 error_logger:error_msg("~n** Cannot get connection id for node ~w~n",
                                        [Node]),
+                error_logger:error_msg("~p:~p~n~p~n", [Error, Reason, Stacktrace]),
                 {reply, false, State}
         end,
     return_call(R, From);
@@ -1110,9 +1112,10 @@ handle_info({AcceptPid, {accept_pending,MyNode,NodeOrHost,Type}}, State0) ->
                     Owners = State#state.conn_owners,
                     {noreply, State#state{conn_owners = Owners#{AcceptPid => Node}}}
             catch
-                _:_ ->
+                Error:Reason:Stacktrace ->
                     error_logger:error_msg("~n** Cannot get connection id for node ~w~n",
                                            [Node]),
+                    error_logger:error_msg("~p:~p~n~p~n", [Error, Reason, Stacktrace]),
                     AcceptPid ! {self(),{accept_pending,nok_pending}},
                     {noreply, State}
             end
