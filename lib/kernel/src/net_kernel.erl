@@ -24,7 +24,7 @@
 -define(nodedown(N, State), verbose({?MODULE, ?LINE, nodedown, N}, 1, State)).
 -define(nodeup(N, State), verbose({?MODULE, ?LINE, nodeup, N}, 1, State)).
 
-%%-define(dist_debug, true).
+-define(dist_debug, true).
 
 -ifdef(dist_debug).
 -define(debug(Term), erlang:display(Term)).
@@ -1057,6 +1057,7 @@ handle_info({SetupPid, {nodeup,Node,Address,Type,NamedMe}},
 handle_info({AcceptPid, {accept_pending,MyNode,NodeOrHost,Type}}, State0) ->
     {NameType, Node, Creation,
      ConnLookup, State} = ensure_node_name(NodeOrHost, State0),
+    ?debug({net_kernel, accept_pending, MyNode, Node, Creation, ConnLookup}),
     case ConnLookup of
 	[#connection{state=pending}=Conn] ->
 	    if
