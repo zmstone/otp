@@ -685,8 +685,8 @@ downgrade(Type, Event, State) ->
 gen_handshake(StateName, Type, Event, State) ->
     try
         tls_dtls_connection:StateName(Type, Event, State)
-    catch error:_ ->
-            throw(?ALERT_REC(?FATAL, ?HANDSHAKE_FAILURE, malformed_handshake_data))
+    catch error:Reason:Stacktrace ->
+            throw(?ALERT_REC(?FATAL, ?HANDSHAKE_FAILURE, #{cause => malformed_handshake_data, error => Reason, stacktrace => Stacktrace}))
     end.
 
 %%--------------------------------------------------------------------
