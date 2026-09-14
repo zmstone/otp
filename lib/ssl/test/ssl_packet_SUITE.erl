@@ -1097,8 +1097,9 @@ packet_switch_mqtt_to_raw(Config) when is_list(Config) ->
     ServerOpts = ssl_test_lib:ssl_options(server_rsa_verify_opts, Config),
     {ClientNode, ServerNode, Hostname} = ssl_test_lib:run_where(Config),
 
-    %% Type 7 with remaining length 121: an incomplete frame in mqtt mode
-    Rest = <<"xyz">>,
+    %% The fixed header and topic length of a PUBLISH frame without its
+    %% topic and payload: an incomplete frame in mqtt mode
+    <<Rest:4/binary, _/binary>> = mqtt_publish(<<"hello">>),
 
     Server = ssl_test_lib:start_server([{node, ClientNode}, {port, 0},
 					{from, self()},
@@ -2716,8 +2717,10 @@ mqtt_varint(N) ->
 send_mqtt_frames(Socket, Sends) ->
     lists:foreach(fun(Bin) ->
                           ok = ssl:send(Socket, Bin),
-                          %% Let the receiver see the chunks one by one
-                          ct:sleep(20)
+                          %% Make the receiver likely to see the chunks one
+                          %% by one. The result does not depend on it: the
+                          %% same frames are expected if chunks arrive together.
+                          ct:sleep(100)
                   end, Sends).
 
 passive_recv_mqtt_frames(Socket, N) ->
