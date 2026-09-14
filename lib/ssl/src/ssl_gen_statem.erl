@@ -2090,6 +2090,7 @@ set_socket_opts(tls_gen_connection, Transport, Socket, Tab, [{packet, Packet}| O
        Packet == sunrm;
        Packet == fcgi;
        Packet == tpkt;
+       Packet == mqtt;
        Packet == line;
        Packet == http;
        Packet == httph;
