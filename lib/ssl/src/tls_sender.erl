@@ -720,15 +720,8 @@ strip_bytes(_, []) ->
     [].
 
 new_async(#data{env = #env{socket_opts_tab = Tab}}) ->
-    High = case ssl_shared_opts:get_high_watermark(Tab) of
-               undefined -> 8192;
-               H -> H
-           end,
-    Low = case ssl_shared_opts:get_low_watermark(Tab) of
-              undefined -> 4096;
-              L -> L
-          end,
-    #async{high = High, low = Low}.
+    #async{high = ssl_shared_opts:get_high_watermark(Tab, 8192),
+           low = ssl_shared_opts:get_low_watermark(Tab, 4096)}.
 
 log_error(Atom) when is_atom(Atom) ->
     ?SSL_LOG(notice, "ssl send socket error", Atom);

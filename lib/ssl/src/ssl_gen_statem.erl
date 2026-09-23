@@ -2002,17 +2002,11 @@ get_socket_opts(Connection, Transport, Socket, Tab, [packet_size | Tags], SockOp
     get_socket_opts(Connection, Transport, Socket, Tab, Tags, SockOpts,
 		    [{packet_size, SockOpts#socket_options.packet_size} | Acc]);
 get_socket_opts(tls_gen_connection, tls_socket_tcp, Socket, Tab, [high_watermark | Tags], SockOpts, Acc) ->
-    Emulated = case ssl_shared_opts:get_high_watermark(Tab) of
-                   undefined -> 8196;
-                   Val -> Val
-               end,
+    Emulated = ssl_shared_opts:get_high_watermark(Tab, 8196),
     get_socket_opts(tls_gen_connection, tls_socket_tcp, Socket, Tab, Tags, SockOpts,
 		    [{high_watermark, Emulated} | Acc]);
 get_socket_opts(tls_gen_connection, tls_socket_tcp, Socket, Tab, [low_watermark | Tags], SockOpts, Acc) ->
-    Emulated = case ssl_shared_opts:get_low_watermark(Tab) of
-                   undefined -> 4096;
-                   Val -> Val
-               end,
+    Emulated = ssl_shared_opts:get_low_watermark(Tab, 4096),
     get_socket_opts(tls_gen_connection, tls_socket_tcp, Socket, Tab, Tags, SockOpts,
 		    [{low_watermark, Emulated} | Acc]);
 get_socket_opts(Connection, Transport, Socket, Tab, [Tag | Tags], SockOpts, Acc) ->

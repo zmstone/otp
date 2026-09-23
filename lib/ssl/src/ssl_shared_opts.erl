@@ -45,9 +45,9 @@
          set_packet/2,
          get_packet/1,
          set_high_watermark/2,
-         get_high_watermark/1,
+         get_high_watermark/2,
          set_low_watermark/2,
-         get_low_watermark/1]).
+         get_low_watermark/2]).
 
 -export_type([t/0]).
 
@@ -79,20 +79,21 @@ get_packet(Ref) ->
 set_high_watermark(Ref, Size) when is_integer(Size), Size >= 0 ->
     atomics:put(Ref, ?HIGH_WATERMARK, Size + 1).
 
--spec get_high_watermark(t()) -> undefined | non_neg_integer().
-get_high_watermark(Ref) ->
-    watermark(atomics:get(Ref, ?HIGH_WATERMARK)).
+%% Default is returned when no watermark has been set.
+-spec get_high_watermark(t(), non_neg_integer()) -> non_neg_integer().
+get_high_watermark(Ref, Default) ->
+    watermark(atomics:get(Ref, ?HIGH_WATERMARK), Default).
 
 -spec set_low_watermark(t(), non_neg_integer()) -> ok.
 set_low_watermark(Ref, Size) when is_integer(Size), Size >= 0 ->
     atomics:put(Ref, ?LOW_WATERMARK, Size + 1).
 
--spec get_low_watermark(t()) -> undefined | non_neg_integer().
-get_low_watermark(Ref) ->
-    watermark(atomics:get(Ref, ?LOW_WATERMARK)).
+-spec get_low_watermark(t(), non_neg_integer()) -> non_neg_integer().
+get_low_watermark(Ref, Default) ->
+    watermark(atomics:get(Ref, ?LOW_WATERMARK), Default).
 
-watermark(?UNSET) -> undefined;
-watermark(Stored) -> Stored - 1.
+watermark(?UNSET, Default) -> Default;
+watermark(Stored, _Default) -> Stored - 1.
 
 packet_to_int(raw) -> 0;
 packet_to_int(0) -> 0;
