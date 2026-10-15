@@ -1493,33 +1493,33 @@ orphan_tables([Tab | Tabs], Node, Ns, Local, Remote) ->
 	false when Active == [], DiscCopyHolders == [], RamCopyHoldersOnDiscNodes == [] ->
 	    %% Special case when all replicas resides on disc less nodes
 	    orphan_tables(Tabs, Node, Ns, [Tab | Local], Remote);
-	false when Active == [], DiscCopyHolders == [],
+        false when Active == [], DiscCopyHolders == [],
                RamCopyHolders =/= [], not (LocalContent == true) ->
-	    case RamCopyHolders -- Ns of
-		[] ->
-		    %% We're last up and the other nodes have not
-		    %% loaded the table. Lets load it if we are
-		    %% the smallest node.
-		    case lists:min(RamCopyHolders) of
-			Min when Min == node() ->
+            case RamCopyHolders -- Ns of
+                [] ->
+                    %% We're last up and the other nodes have not
+                    %% loaded the table. Lets load it if we are
+                    %% the smallest node.
+                    case lists:min(RamCopyHolders) of
+                        Min when Min == node() ->
                 %% This is safe for ram copies because if all nodes are
                 %% waiting that means the table is empty on all nodes.
                 %% here we just need to elect a bootstrap node to break
                 %% the waiting loop.
-			    case mnesia_recover:get_master_nodes(Tab) of
-				[] ->
-				    L = [Tab | Local],
-				    orphan_tables(Tabs, Node, Ns, L, Remote);
-				Masters ->
-				    R = [{Tab, Masters} | Remote],
-				    orphan_tables(Tabs, Node, Ns, Local, R)
-			    end;
-			_ ->
-			    orphan_tables(Tabs, Node, Ns, Local, Remote)
-		    end;
-		_ ->
-		    orphan_tables(Tabs, Node, Ns, Local, Remote)
-	    end;
+                            case mnesia_recover:get_master_nodes(Tab) of
+                                [] ->
+                                    L = [Tab | Local],
+                                    orphan_tables(Tabs, Node, Ns, L, Remote);
+                                Masters ->
+                                    R = [{Tab, Masters} | Remote],
+                                    orphan_tables(Tabs, Node, Ns, Local, R)
+                            end;
+                        _ ->
+                            orphan_tables(Tabs, Node, Ns, Local, Remote)
+                    end;
+                _ ->
+                    orphan_tables(Tabs, Node, Ns, Local, Remote)
+            end;
 	_ when LocalContent == true ->
 	    orphan_tables(Tabs, Node, Ns, [Tab | Local], Remote);
 	_ ->
@@ -1683,13 +1683,13 @@ last_consistent_replica(Cs, Tab, Downs) ->
 	    false;
 	Storage == ram_copies ->
         if
-		Disc == [], DiscOnly == [], Ext == [], BetterCopies0 == [] ->
-		    %% RAM-only table and no non-down remote copy holder.
-		    %% Safe to load locally.
+                Disc == [], DiscOnly == [], Ext == [], BetterCopies0 == [] ->
+                    %% RAM-only table and no non-down remote copy holder.
+                    %% Safe to load locally.
 		    {true, {Tab, ram_only}};
 		true ->
-		    %% Either a disc-resident copy exists or a non-down
-		    %% remote copy holder may have a better copy.
+                    %% Either a disc-resident copy exists or a non-down
+                    %% remote copy holder may have a better copy.
 		    false
 	    end;
 	AccessMode == read_only ->

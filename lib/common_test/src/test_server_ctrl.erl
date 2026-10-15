@@ -4210,7 +4210,7 @@ progress(failed, CaseNum, Mod, Func, GrName, Loc, Reason, T,
             failed
     end,
     test_server_sup:framework_call(report, [tc_done,{Mod,{Func,GrName},
-						     {StatusTag,Reason}}]),
+                                                     {StatusTag,Reason}}]),
     TimeStr = io_lib:format("~.fs", [Time]),
     Comment =
 	case Comment0 of

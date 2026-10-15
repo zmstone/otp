@@ -5353,9 +5353,9 @@ clear_table(Tab) ->
 match_delete(Tab, Pattern) ->
     case get(mnesia_activity_state) of
 	State = {Mod, Tid, _Ts} when element(1, Tid) =/= tid ->
-	    transaction(State, fun() -> do_clear_table(Tab, Pattern) end, [], infinity, Mod, sync);
+            transaction(State, fun() -> do_clear_table(Tab, Pattern) end, [], infinity, Mod, sync);
 	undefined ->
-	    transaction(undefined, fun() -> do_clear_table(Tab, Pattern) end, [], infinity, ?DEFAULT_ACCESS, sync);
+            transaction(undefined, fun() -> do_clear_table(Tab, Pattern) end, [], infinity, ?DEFAULT_ACCESS, sync);
 	_ -> %% Not allowed for clear_table
 	    mnesia:abort({aborted, nested_transaction})
     end.
@@ -5363,9 +5363,9 @@ match_delete(Tab, Pattern) ->
 do_clear_table(Tab, Pattern) ->
     case get(mnesia_activity_state) of
 	{?DEFAULT_ACCESS, Tid, Ts}  ->
-	    clear_table(Tid, Ts, Tab, Pattern);
+            clear_table(Tid, Ts, Tab, Pattern);
 	{Mod, Tid, Ts} ->
-	    Mod:clear_table(Tid, Ts, Tab, Pattern);
+            Mod:clear_table(Tid, Ts, Tab, Pattern);
 	_ ->
 	    abort(no_transaction)
     end.

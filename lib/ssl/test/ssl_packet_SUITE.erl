@@ -294,7 +294,7 @@ protocol_packet_tests() ->
 	 packet_http_bin_decode_multi,
 	 packet_line_decode, packet_line_decode_list,
 	 packet_asn1_decode, packet_asn1_decode_list,
-	 packet_sunrm_decode, packet_sunrm_decode_list] ++
+         packet_sunrm_decode, packet_sunrm_decode_list] ++
         mqtt_packet_tests().
 
 mqtt_packet_tests() ->
@@ -1037,17 +1037,17 @@ packet_mqtt(Config, Active, Recv) ->
     Frames = [?MQTT_CONNECT, ?MQTT_PINGREQ, Big],
 
     Server = ssl_test_lib:start_server([{node, ClientNode}, {port, 0},
-					{from, self()},
-					{mfa, {?MODULE, Recv, [length(Frames)]}},
-					{options, [{active, Active}, {mode, binary},
+                                        {from, self()},
+                                        {mfa, {?MODULE, Recv, [length(Frames)]}},
+                                        {options, [{active, Active}, {mode, binary},
                                                    {nodelay, true}, {packet, mqtt} |
                                                    ServerOpts]}]),
     Port = ssl_test_lib:inet_port(Server),
     Client = ssl_test_lib:start_client([{node, ServerNode}, {port, Port},
-					{host, Hostname},
-					{from, self()},
-					{mfa, {?MODULE, send_mqtt_frames, [Sends]}},
-					{options, [{active, false}, {mode, binary},
+                                        {host, Hostname},
+                                        {from, self()},
+                                        {mfa, {?MODULE, send_mqtt_frames, [Sends]}},
+                                        {options, [{active, false}, {mode, binary},
                                                    {nodelay, true} | ClientOpts]}]),
 
     ssl_test_lib:check_result(Server, Frames, Client, ok),
@@ -1069,17 +1069,17 @@ packet_switch_raw_to_mqtt(Config) when is_list(Config) ->
     <<Head:3/binary, Tail/binary>> = Publish,
 
     Server = ssl_test_lib:start_server([{node, ClientNode}, {port, 0},
-					{from, self()},
-					{mfa, {?MODULE, recv_raw_to_mqtt, [Publish]}},
-					{options, [{active, false}, {mode, binary},
+                                        {from, self()},
+                                        {mfa, {?MODULE, recv_raw_to_mqtt, [Publish]}},
+                                        {options, [{active, false}, {mode, binary},
                                                    {nodelay, true}, {packet, raw} |
                                                    ServerOpts]}]),
     Port = ssl_test_lib:inet_port(Server),
     Client = ssl_test_lib:start_client([{node, ServerNode}, {port, Port},
-					{host, Hostname},
-					{from, self()},
-					{mfa, {?MODULE, send_raw_to_mqtt, [Head, Tail]}},
-					{options, [{active, false}, {mode, binary},
+                                        {host, Hostname},
+                                        {from, self()},
+                                        {mfa, {?MODULE, send_raw_to_mqtt, [Head, Tail]}},
+                                        {options, [{active, false}, {mode, binary},
                                                    {nodelay, true} | ClientOpts]}]),
 
     ssl_test_lib:check_result(Server, ok, Client, ok),
@@ -1102,17 +1102,17 @@ packet_switch_mqtt_to_raw(Config) when is_list(Config) ->
     <<Rest:4/binary, _/binary>> = mqtt_publish(<<"hello">>),
 
     Server = ssl_test_lib:start_server([{node, ClientNode}, {port, 0},
-					{from, self()},
-					{mfa, {?MODULE, recv_mqtt_to_raw, [Rest]}},
-					{options, [{active, false}, {mode, binary},
+                                        {from, self()},
+                                        {mfa, {?MODULE, recv_mqtt_to_raw, [Rest]}},
+                                        {options, [{active, false}, {mode, binary},
                                                    {nodelay, true}, {packet, mqtt} |
                                                    ServerOpts]}]),
     Port = ssl_test_lib:inet_port(Server),
     Client = ssl_test_lib:start_client([{node, ServerNode}, {port, Port},
-					{host, Hostname},
-					{from, self()},
-					{mfa, {?MODULE, send_mqtt_to_raw, [Rest]}},
-					{options, [{active, false}, {mode, binary},
+                                        {host, Hostname},
+                                        {from, self()},
+                                        {mfa, {?MODULE, send_mqtt_to_raw, [Rest]}},
+                                        {options, [{active, false}, {mode, binary},
                                                    {nodelay, true} | ClientOpts]}]),
 
     ssl_test_lib:check_result(Server, ok, Client, ok),

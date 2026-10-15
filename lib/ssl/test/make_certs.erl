@@ -208,8 +208,8 @@ make_ocsp_response(Port, Root, CA, User, Issuer, C) ->
            " -url ", "http://localhost:" ++ integer_to_list(Port),
            " -no_nonce",
            " -respout ", OCSPResp,
-	   " -issuer ", IssuerCert,
-	   " -cert ", UsrCert],
+           " -issuer ", IssuerCert,
+           " -cert ", UsrCert],
     Env = [{"ROOTDIR", filename:absname(Root)}],
     cmd(Cmd, Env),
     OCSPResp.

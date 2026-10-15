@@ -33,7 +33,7 @@
 	 tm_prepare/1,
 	 tm_retain/4,
 	 tm_retain/5,
-	 tm_retain/6,
+         tm_retain/6,
 	 tm_enter_pending/1,
 	 tm_enter_pending/3,
 	 tm_exit_pending/1
@@ -167,7 +167,7 @@ tm_retain(Tid, Tab, Key, Op, Checkpoints) ->
 tm_retain(Tid, Tab, Key, Op, Checkpoints, Obj) ->
     case Op of
 	clear_table ->
-	    OldRecs = mnesia_lib:db_match_object(Tab, Obj),
+            OldRecs = mnesia_lib:db_match_object(Tab, Obj),
 	    send_group_retain(OldRecs, Checkpoints, Tid, Tab, []),
 	    OldRecs;
 	_ ->

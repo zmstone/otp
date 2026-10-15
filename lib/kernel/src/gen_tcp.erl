@@ -375,7 +375,7 @@ this value is returned from `inet:getopts/2` when called with the option name
         recvttl |
         pktoptions |
         user_timeout |
-	    ipv6_v6only |
+            ipv6_v6only |
         ipv6_probe.
 -type connect_option() ::
         {fd, Fd :: non_neg_integer()} |

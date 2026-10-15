@@ -936,7 +936,7 @@ handle_msg({connect, ODBCCmd0, AutoCommitMode, SrollableCursors},
 		{ok, OdbcSocket} ->
 		    gen_tcp:close(ListenSocketOdbc),
                     ODBCCmd = unwrap_conn_str(ODBCCmd0),
-		    odbc_send(OdbcSocket, ODBCCmd),
+                    odbc_send(OdbcSocket, ODBCCmd),
 		    {noreply, NewState#state{odbc_socket = OdbcSocket,
 					     sup_socket = SupSocket}, 
 		     Timeout};

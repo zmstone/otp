@@ -376,7 +376,7 @@ read_corrected_time(int os_drift_corrected, ErtsSchedulerData *esdp)
     else {
 	if (os_mtime < time_sup.inf.c.parmon.cdata.insts.prev.os_mtime)
 	    erts_exit(ERTS_ABORT_EXIT,
-		     "OS monotonic time stepped backwards, maybe add '+c false' in vm.args\n");
+                     "OS monotonic time stepped backwards, maybe add '+c false' in vm.args\n");
 	ci = time_sup.inf.c.parmon.cdata.insts.prev;
     }
 
@@ -475,7 +475,7 @@ check_time_correction(void *vesdp)
 
     if (os_mtime < ci.os_mtime)
 	erts_exit(ERTS_ABORT_EXIT,
-		 "OS monotonic time stepped backwards, maybe add '+c false' in vm.args\n");
+                 "OS monotonic time stepped backwards, maybe add '+c false' in vm.args\n");
 
     erl_mtime = calc_corrected_erl_mtime(os_mtime, &ci, &mdiff,
 					 os_drift_corrected);
@@ -903,7 +903,7 @@ finalize_corrected_time_offset(ErtsSystemTime *stimep)
 
     if (os_mtime < ci.os_mtime)
 	erts_exit(ERTS_ABORT_EXIT,
-		 "OS monotonic time stepped backwards, maybe add '+c false' in vm.args\n");
+                 "OS monotonic time stepped backwards, maybe add '+c false' in vm.args\n");
 
     return calc_corrected_erl_mtime(os_mtime, &ci, NULL,
 				    os_drift_corrected);

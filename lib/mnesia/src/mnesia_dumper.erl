@@ -412,7 +412,7 @@ dets_insert(Op,Tab,Key,Val, Storage0) ->
                 '_' -> dets_cleared(Tab);
                 _ -> dets_updated(Tab, Val)
             end,
-	    ok = mnesia_lib:db_match_erase(Storage, Tab, Val)
+            ok = mnesia_lib:db_match_erase(Storage, Tab, Val)
     end.
 
 dets_updated(Tab,Key) ->
