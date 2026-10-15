@@ -517,6 +517,14 @@ init_per_testcase(TestCase, Config) when TestCase == ecdhe_ecdsa_with_aes_256_cc
         _ ->
             {skip, "Missing AES_256_CCM crypto support"}
     end;
+init_per_testcase(ecdhe_psk_chacha_dtls_cipher, Config) ->
+    case lists:member(chacha20_poly1305, crypto:supports(ciphers)) of
+        true ->
+            ct:timetrap(?TIMEOUT),
+            Config;
+        false ->
+            {skip, "Missing ChaCha20-Poly1305 crypto support"}
+    end;
 init_per_testcase(TestCase, Config) ->
     Cipher = ssl_test_lib:test_cipher(TestCase, Config),
     SupCiphers = crypto:supports(ciphers),
