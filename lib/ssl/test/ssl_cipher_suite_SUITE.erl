@@ -986,9 +986,12 @@ ecdhe_psk_chacha_dtls_cipher(_Config) ->
                 {ok, Server0} = ssl:transport_accept(ListenSocket, Timeout),
                 {ok, Server} = ssl:handshake(Server0, Timeout),
                 {ok, <<"ping">>} = ssl:recv(Server, 0, Timeout),
-                ok = ssl:send(Server, <<"pong">>),
                 {ok, [{selected_cipher_suite, ExpectedSuite}]} =
                     ssl:connection_information(Server, [selected_cipher_suite]),
+                ok = ssl:send(Server, <<"pong">>),
+                %% Keep the connection alive until the client has checked its
+                %% cipher suite and closed it.
+                {error, closed} = ssl:recv(Server, 0, Timeout),
                 ssl:close(Server),
                 ok
             catch
